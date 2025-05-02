@@ -53,6 +53,25 @@ export class EmailService {
       console.log('Headers:', payload.headers);
       console.log('Parts:', payload.parts?.length || 0);
       console.log('MIME Type:', payload.mimeType);
+      console.log('Body:', payload.body ? {
+        size: payload.body.size,
+        hasData: !!payload.body.data,
+        dataLength: payload.body.data?.length
+      } : 'No body');
+      
+      if (payload.parts) {
+        console.log('\nParts Details:');
+        console.log('--------------');
+        payload.parts.forEach((part: any, index: number) => {
+          console.log(`Part ${index}:`, {
+            mimeType: part.mimeType,
+            filename: part.filename,
+            bodySize: part.body?.size,
+            hasData: !!part.body?.data,
+            dataLength: part.body?.data?.length
+          });
+        });
+      }
       
       // Validera och extrahera innehåll
       const { subject, from, to, date, content } = extractEmailContent(payload);

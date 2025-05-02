@@ -82,13 +82,26 @@ export function extractEmailContent(payload: any): { subject: string; from: stri
 
   let content = '';
 
-  if (payload.parts) {
-    for (const part of payload.parts) {
-      if (part.mimeType === 'text/plain' || part.mimeType === 'text/html') {
-        content = Buffer.from(part.body.data, 'base64').toString();
-        break; // Vi tar första textinnehållet vi hittar
+  // Rekursiv funktion för att hitta textinnehåll
+  const findTextContent = (part: any): string => {
+    if (part.mimeType === 'text/plain' || part.mimeType === 'text/html') {
+      if (part.body && part.body.data) {
+        return Buffer.from(part.body.data, 'base64').toString();
+      }
+    } else if (part.parts) {
+      // Gå igenom alla delar rekursivt
+      for (const subPart of part.parts) {
+        const foundContent = findTextContent(subPart);
+        if (foundContent) {
+          return foundContent;
+        }
       }
     }
+    return '';
+  };
+
+  if (payload.parts) {
+    content = findTextContent(payload);
   } else if (payload.body && payload.body.data) {
     content = Buffer.from(payload.body.data, 'base64').toString();
   }
