@@ -36,23 +36,26 @@ export class CustomerService {
    * Get customer by customer number
    */
   async getCustomerByNumber(customerNumber: string): Promise<Customer | null> {
-    const snapshot = await adminDb
-      .collection(this.COLLECTION)
-      .where('customerNumber', '==', customerNumber)
-      .limit(1)
-      .get();
+    try {
+      const snapshot = await adminDb
+        .collection(this.COLLECTION)
+        .where('customerNumber', '==', customerNumber)
+        .limit(1)
+        .get();
 
-    if (snapshot.empty) {
-      return null;
+      if (snapshot.empty) {
+        return null;
+      }
+
+      const doc = snapshot.docs[0];
+      return {
+        id: doc.id,
+        ...doc.data()
+      } as Customer;
+    } catch (error) {
+      console.error('Error getting customer:', error);
+      throw error;
     }
-
-    const doc = snapshot.docs[0];
-    const data = doc.data();
-    return {
-      ...data,
-      createdAt: data.createdAt.toDate(),
-      updatedAt: data.updatedAt.toDate()
-    } as Customer;
   }
 
   /**
@@ -109,5 +112,20 @@ export class CustomerService {
       createdAt: data.createdAt.toDate(),
       updatedAt: data.updatedAt.toDate()
     } as Customer;
+  }
+
+  async updateCustomer(customerId: string, customerData: Partial<Customer>): Promise<void> {
+    try {
+      await adminDb
+        .collection(this.COLLECTION)
+        .doc(customerId)
+        .update({
+          ...customerData,
+          updatedAt: new Date()
+        });
+    } catch (error) {
+      console.error('Error updating customer:', error);
+      throw error;
+    }
   }
 } 

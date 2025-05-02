@@ -132,63 +132,97 @@ export class EmailController {
   /**
    * Process a specific email
    */
-  async processEmail(req: Request, res: Response): Promise<Response | undefined> {
+  async processEmail(req: Request, res: Response): Promise<Response> {
     try {
       const { emailId, customerId } = req.params;
 
       if (!emailId || !customerId) {
-        return res.status(400).json({ error: 'Email ID and Customer ID are required' });
+        return res.status(400).json({ 
+          error: 'Email ID and Customer ID are required',
+          code: 'MISSING_PARAMETERS'
+        });
+      }
+
+      if (!this.tokens) {
+        return res.status(401).json({ 
+          error: 'Authentication required',
+          code: 'UNAUTHORIZED'
+        });
       }
 
       const processedEmail = await this.emailService.processEmail(emailId);
+      
+      if (!processedEmail) {
+        return res.status(404).json({ 
+          error: 'Email not found or could not be processed',
+          code: 'EMAIL_NOT_FOUND'
+        });
+      }
+
       return res.json(processedEmail);
     } catch (error: any) {
       console.error('Error processing email:', error);
+      
+      if (error.code === 'NOT_FOUND') {
+        return res.status(404).json({ 
+          error: 'Email not found',
+          code: 'EMAIL_NOT_FOUND'
+        });
+      }
+
       return res.status(500).json({ 
         error: 'Failed to process email',
-        details: error.message
+        code: 'INTERNAL_SERVER_ERROR',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
   }
 
-  async getCustomerEmails(req: Request, res: Response): Promise<Response | undefined> {
+  async getCustomerEmails(req: Request, res: Response): Promise<Response> {
     try {
       const { customerId } = req.params;
 
       if (!customerId) {
-        return res.status(400).json({ error: 'Customer ID is required' });
+        return res.status(400).json({ 
+          error: 'Customer ID is required',
+          code: 'MISSING_CUSTOMER_ID'
+        });
       }
 
-      const response = await this.gmail.users.messages.list({
-        userId: 'me',
-        maxResults: 50
-      });
+      if (!this.tokens) {
+        return res.status(401).json({ 
+          error: 'Authentication required',
+          code: 'UNAUTHORIZED'
+        });
+      }
 
-      const messages = response.data.messages || [];
-      const emails = await Promise.all(
-        messages.map(async (message: any) => {
-          const messageDetails = await this.gmail.users.messages.get({
-            userId: 'me',
-            id: message.id,
-            format: 'metadata'
-          });
+      this.oauth2Client.setCredentials(this.tokens);
 
-          return {
-            id: message.id,
-            threadId: message.threadId,
-            subject: this.getHeaderValue(messageDetails.data.payload.headers, 'Subject'),
-            from: this.getHeaderValue(messageDetails.data.payload.headers, 'From'),
-            to: this.getHeaderValue(messageDetails.data.payload.headers, 'To'),
-            date: new Date(this.getHeaderValue(messageDetails.data.payload.headers, 'Date')),
-            snippet: messageDetails.data.snippet
-          };
-        })
-      );
+      const emails = await this.emailService.getCustomerEmails(customerId);
+      
+      if (!emails || emails.length === 0) {
+        return res.status(404).json({ 
+          error: 'No emails found for this customer',
+          code: 'NO_EMAILS_FOUND'
+        });
+      }
 
       return res.json(emails);
-    } catch (error) {
-      console.error('Error getting emails:', error);
-      return res.status(500).json({ error: 'Failed to get emails' });
+    } catch (error: any) {
+      console.error('Error getting customer emails:', error);
+      
+      if (error.code === 'NOT_FOUND') {
+        return res.status(404).json({ 
+          error: 'Customer not found',
+          code: 'CUSTOMER_NOT_FOUND'
+        });
+      }
+
+      return res.status(500).json({ 
+        error: 'Failed to get customer emails',
+        code: 'INTERNAL_SERVER_ERROR',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
   }
 

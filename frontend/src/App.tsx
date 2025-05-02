@@ -16,6 +16,7 @@ function App() {
         <main>
           <Routes>
             <Route path="/user/:userId" element={<UserPage />} />
+            <Route path="/customer/:customerId" element={<UserPage />} />
             <Route path="/" element={
               <div className="welcome">
                 <h2>Välkommen</h2>

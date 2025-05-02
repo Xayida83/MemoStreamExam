@@ -1,43 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Email } from '../models/Email.js';
-import { AudioPlayer } from './AudioPlayer.js';
-import { ImageGallery } from './ImageGallery.js';
+import { Email } from '../types/Email';
+import { AudioPlayer } from './AudioPlayer';
+import { ImageGallery } from './ImageGallery';
 
 export const UserPage: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>();
+  const { customerId } = useParams<{ customerId: string }>();
   const [emails, setEmails] = useState<Email[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchEmails = async () => {
-      if (!userId) return;
+      if (!customerId) {
+        setError('No customer ID provided');
+        setLoading(false);
+        return;
+      }
       
       try {
-        const response = await fetch(`/api/emails/${userId}`);
+        const response = await fetch(`/api/emails/${customerId}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch emails');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch emails');
         }
         const data = await response.json();
         setEmails(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : 'An error occurred while fetching emails');
       } finally {
         setLoading(false);
       }
     };
 
     fetchEmails();
-  }, [userId]);
+  }, [customerId]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!userId) return <div>No user ID provided</div>;
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
+  if (!customerId) return <div className="error">No customer ID provided</div>;
 
   return (
     <div className="user-page">
-      <h1>User Content</h1>
+      <h1>Customer Content</h1>
       <div className="emails-container">
         {emails.map((email) => (
           <div key={email.id} className="email-card">
