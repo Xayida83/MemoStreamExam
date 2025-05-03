@@ -1,6 +1,5 @@
 export interface Customer {
   id: string;
-  customerNumber: string;
   name: string;
   email: string;
   urlSlug: string;

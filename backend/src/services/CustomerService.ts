@@ -8,16 +8,12 @@ export class CustomerService {
   /**
    * Create a new customer
    */
-  async createCustomer(customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt' | 'customerNumber'>): Promise<Customer> {
+  async createCustomer(customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt'>): Promise<Customer> {
     const customerRef = adminDb.collection(this.COLLECTION).doc();
-    
-    // Använd urlSlug som kundnummer
-    const customerNumber = customer.urlSlug;
     
     const newCustomer: Customer = {
       ...customer,
       id: customerRef.id,
-      customerNumber,
       createdAt: new Date(),
       updatedAt: new Date(),
       settings: {

@@ -4,10 +4,10 @@ async function createCustomer() {
   const customerService = new CustomerService();
 
   const newCustomer = {
-    name: 'Lotta Tänker',
-    email: 'lindberg.lotta.rebecka@gmail.com',
-    urlSlug: 'lotta-tankar',  // Detta blir URL:en
-    authorizedEmails: ['lindberg.lotta.rebecka@gmail.com'],
+    name: 'Mats i meningar',
+    email: 'lotta.lindberg83@gmail.com',
+    urlSlug: 'matsimeningar',  // Detta blir URL:en
+    authorizedEmails: ['lotta.lindberg83@gmail.com'],
     settings: {
       allowedAttachmentTypes: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],
       maxAttachmentSize: 10 * 1024 * 1024, // 10MB
@@ -23,7 +23,7 @@ async function createCustomer() {
     console.log('Kundinformation:');
     console.log('- Namn:', customer.name);
     console.log('- ID:', customer.id);
-    console.log('- URL:', `http://localhost:3000/${customer.customerNumber}`);
+    console.log('- URL:', `http://localhost:3000/${customer.urlSlug}`);
     console.log('- Tillåtna e-postadresser:', customer.authorizedEmails.join(', '));
     console.log('- Skapad:', customer.createdAt);
   } catch (error) {
