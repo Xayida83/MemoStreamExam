@@ -3,6 +3,7 @@ export interface Customer {
   customerNumber: string;
   name: string;
   email: string;
+  urlSlug: string;
   phone?: string;
   authorizedEmails: string[];
   address?: {
