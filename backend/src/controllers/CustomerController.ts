@@ -19,7 +19,7 @@ export class CustomerController {
         });
       }
 
-      const customer = await this.customerService.getCustomerByNumber(customerId);
+      const customer = await this.customerService.getCustomerById(customerId);
       
       if (!customer) {
         return res.status(404).json({
@@ -42,21 +42,6 @@ export class CustomerController {
   async createCustomer(req: Request, res: Response): Promise<Response> {
     try {
       const customerData = req.body;
-
-      if (!customerData.customerNumber) {
-        return res.status(400).json({
-          error: 'Customer number is required',
-          code: 'MISSING_CUSTOMER_NUMBER'
-        });
-      }
-
-      const existingCustomer = await this.customerService.getCustomerByNumber(customerData.customerNumber);
-      if (existingCustomer) {
-        return res.status(409).json({
-          error: 'Customer number already exists',
-          code: 'DUPLICATE_CUSTOMER_NUMBER'
-        });
-      }
 
       const customer = await this.customerService.createCustomer(customerData);
       return res.status(201).json(customer);

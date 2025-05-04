@@ -1,3 +1,4 @@
+//TODO ta bort?
 import { CustomerService } from '../services/CustomerService.js';
 
 async function checkCustomer() {

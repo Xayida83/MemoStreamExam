@@ -1,5 +1,5 @@
 import { adminDb } from '../config/firebase-admin.js';
-
+//TODO ta bort?
 async function migrateDatabase() {
   try {
     // Get all customers

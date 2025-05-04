@@ -60,7 +60,6 @@ export class EmailPoller {
     try {
       const systemCustomer = {
         id: 'system',
-        customerNumber: 'system',
         name: 'System',
         authorizedEmails: [this.SYSTEM_EMAIL],
         settings: {

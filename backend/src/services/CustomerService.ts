@@ -78,22 +78,6 @@ export class CustomerService {
   }
 
   /**
-   * Extract customer number from email subject
-   * Expected format: "123: Subject text"
-   */
-  extractCustomerNumber(subject: string): { customerNumber: string; cleanSubject: string } | null {
-    const match = subject.match(/^(\d+):\s*(.+)$/);
-    if (!match) {
-      return null;
-    }
-
-    return {
-      customerNumber: match[1],
-      cleanSubject: match[2]
-    };
-  }
-
-  /**
    * Get customer by ID
    */
   async getCustomerById(customerId: string): Promise<Customer | null> {
