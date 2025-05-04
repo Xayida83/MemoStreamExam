@@ -10,6 +10,7 @@ export class CustomerService {
    */
   async createCustomer(customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt'>): Promise<Customer> {
     const customerRef = adminDb.collection(this.COLLECTION).doc();
+    
     const newCustomer: Customer = {
       ...customer,
       id: customerRef.id,
@@ -33,33 +34,36 @@ export class CustomerService {
   }
 
   /**
-   * Get customer by customer number
+   * Get customer by URL slug
    */
-  async getCustomerByNumber(customerNumber: string): Promise<Customer | null> {
-    const snapshot = await adminDb
-      .collection(this.COLLECTION)
-      .where('customerNumber', '==', customerNumber)
-      .limit(1)
-      .get();
+  async getCustomerBySlug(urlSlug: string): Promise<Customer | null> {
+    try {
+      const snapshot = await adminDb
+        .collection(this.COLLECTION)
+        .where('urlSlug', '==', urlSlug)
+        .limit(1)
+        .get();
 
-    if (snapshot.empty) {
-      return null;
+      if (snapshot.empty) {
+        return null;
+      }
+
+      const doc = snapshot.docs[0];
+      return {
+        id: doc.id,
+        ...doc.data()
+      } as Customer;
+    } catch (error) {
+      console.error('Error getting customer:', error);
+      throw error;
     }
-
-    const doc = snapshot.docs[0];
-    const data = doc.data();
-    return {
-      ...data,
-      createdAt: data.createdAt.toDate(),
-      updatedAt: data.updatedAt.toDate()
-    } as Customer;
   }
 
   /**
    * Validate if an email is authorized for a customer
    */
-  async isEmailAuthorized(customerNumber: string, fromEmail: string): Promise<boolean> {
-    const customer = await this.getCustomerByNumber(customerNumber);
+  async isEmailAuthorized(urlSlug: string, fromEmail: string): Promise<boolean> {
+    const customer = await this.getCustomerBySlug(urlSlug);
     if (!customer) {
       return false;
     }
@@ -109,5 +113,20 @@ export class CustomerService {
       createdAt: data.createdAt.toDate(),
       updatedAt: data.updatedAt.toDate()
     } as Customer;
+  }
+
+  async updateCustomer(customerId: string, customerData: Partial<Customer>): Promise<void> {
+    try {
+      await adminDb
+        .collection(this.COLLECTION)
+        .doc(customerId)
+        .update({
+          ...customerData,
+          updatedAt: new Date()
+        });
+    } catch (error) {
+      console.error('Error updating customer:', error);
+      throw error;
+    }
   }
 } 

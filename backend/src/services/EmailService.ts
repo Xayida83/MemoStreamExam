@@ -26,7 +26,7 @@ export class EmailService {
     return this.gmailClient;
   }
 
-  async processEmail(emailId: string): Promise<void> {
+  async processEmail(emailId: string): Promise<Email> {
     try {
       const gmail = await this.getGmailClient();
       if (!gmail) {
@@ -42,53 +42,24 @@ export class EmailService {
         format: 'full'
       });
 
+      if (!message.data) {
+        throw new Error('No email data found');
+      }
+
       const payload = message.data.payload;
       if (!payload) {
         throw new Error('No payload in email message');
       }
 
-      // Logga metadata
-      console.log('\nEmail Metadata:');
-      console.log('----------------');
-      console.log('Headers:', payload.headers);
-      console.log('Parts:', payload.parts?.length || 0);
-      console.log('MIME Type:', payload.mimeType);
-      console.log('Body:', payload.body ? {
-        size: payload.body.size,
-        hasData: !!payload.body.data,
-        dataLength: payload.body.data?.length
-      } : 'No body');
-      
-      if (payload.parts) {
-        console.log('\nParts Details:');
-        console.log('--------------');
-        payload.parts.forEach((part: any, index: number) => {
-          console.log(`Part ${index}:`, {
-            mimeType: part.mimeType,
-            filename: part.filename,
-            bodySize: part.body?.size,
-            hasData: !!part.body?.data,
-            dataLength: part.body?.data?.length
-          });
-        });
-      }
-      
       // Validera och extrahera innehåll
       const { subject, from, to, date, content } = extractEmailContent(payload);
       
-      console.log('\nExtracted Content:');
-      console.log('-----------------');
-      console.log('Subject:', subject);
-      console.log('From:', from);
-      console.log('To:', to);
-      console.log('Date:', date);
-      console.log('Content Length:', content.length);
+      if (!subject || !from || !to || !date || !content) {
+        throw new Error('Missing required email content');
+      }
 
       // Bearbeta bilagor
-      console.log('\nProcessing Attachments:');
-      console.log('----------------------');
       const attachments = await this.processAttachments(payload, emailId);
-      console.log(`Found ${attachments.length} attachments`);
 
       // Skapa e-postobjekt
       const processedEmail: Email = {
@@ -106,10 +77,7 @@ export class EmailService {
       this.validateEmail(processedEmail);
 
       // Spara i databasen
-      console.log('\nSaving to Database:');
-      console.log('------------------');
       await this.databaseService.saveEmail(processedEmail);
-      console.log('Email saved successfully');
 
       // Markera som läst
       await gmail.users.messages.modify({
@@ -119,10 +87,9 @@ export class EmailService {
           removeLabelIds: ['UNREAD']
         }
       });
-      console.log('Email marked as read');
 
-      console.log(`\n=== Email ${emailId} processed successfully ===\n`);
-    } catch (error) {
+      return processedEmail;
+    } catch (error: any) {
       console.error(`Error processing email ${emailId}:`, error);
       throw error;
     }
@@ -166,11 +133,22 @@ export class EmailService {
    * @returns Array of emails
    */
   async getCustomerEmails(customerId: string): Promise<Email[]> {
-    const customer = await this.customerService.getCustomerByNumber(customerId);
-    if (!customer) {
-      throw new Error('Customer not found');
+    try {
+      const customer = await this.customerService.getCustomerByNumber(customerId);
+      if (!customer) {
+        throw new Error('Customer not found');
+      }
+
+      const emails = await this.databaseService.getCustomerEmails(customerId);
+      if (!emails || emails.length === 0) {
+        throw new Error('No emails found for this customer');
+      }
+
+      return emails;
+    } catch (error: any) {
+      console.error(`Error getting customer emails for ${customerId}:`, error);
+      throw error;
     }
-    return this.databaseService.getCustomerEmails(customerId);
   }
 
   private getHeaderValue(headers: any[], name: string): string {

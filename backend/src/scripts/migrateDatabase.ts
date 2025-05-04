@@ -1,66 +1,51 @@
 import { adminDb } from '../config/firebase-admin.js';
-import { Timestamp } from 'firebase-admin/firestore';
 
 async function migrateDatabase() {
   try {
-    console.log('Starting database migration...');
-
-    // Get all emails
-    const emailsSnapshot = await adminDb.collection('emails').get();
-    console.log(`Found ${emailsSnapshot.size} emails to migrate`);
-
     // Get all customers
     const customersSnapshot = await adminDb.collection('customers').get();
     const customers = new Map();
+    
     customersSnapshot.forEach(doc => {
-      customers.set(doc.data().customerNumber, doc.id);
+      const customer = doc.data();
+      customers.set(customer.urlSlug, doc.id);
     });
 
+    // Get all emails
+    const emailsSnapshot = await adminDb.collection('emails').get();
+    
     // Update each email
     for (const emailDoc of emailsSnapshot.docs) {
       const email = emailDoc.data();
       
-      // Extract customer number from subject
-      const match = email.subject.match(/^(\d+):/);
+      // Extract URL slug from subject
+      const match = email.subject.match(/^([a-z0-9-]+):/);
       if (!match) {
-        console.log(`Skipping email ${emailDoc.id} - no customer number found in subject`);
+        console.log(`Skipping email ${emailDoc.id} - no URL slug found in subject`);
         continue;
       }
 
-      const customerNumber = match[1];
-      const customerId = customers.get(customerNumber);
+      const urlSlug = match[1];
+      const customerId = customers.get(urlSlug);
 
       if (!customerId) {
-        console.log(`Skipping email ${emailDoc.id} - no customer found for number ${customerNumber}`);
+        console.log(`Skipping email ${emailDoc.id} - no customer found for URL slug ${urlSlug}`);
         continue;
       }
 
       // Update email with customerId
       await adminDb.collection('emails').doc(emailDoc.id).update({
         customerId,
-        subject: email.subject.replace(/^\d+:\s*/, '') // Remove customer number from subject
+        subject: email.subject.replace(/^[a-z0-9-]+:\s*/, '') // Remove URL slug from subject
       });
 
-      // Also save to customer's subcollection
-      await adminDb
-        .collection('customers')
-        .doc(customerId)
-        .collection('emails')
-        .doc(emailDoc.id)
-        .set({
-          ...email,
-          customerId,
-          subject: email.subject.replace(/^\d+:\s*/, '')
-        });
-
-      console.log(`Migrated email ${emailDoc.id} to customer ${customerId}`);
+      console.log(`Updated email ${emailDoc.id} with customerId ${customerId}`);
     }
 
-    console.log('Database migration completed successfully!');
+    console.log('Migration completed successfully');
   } catch (error) {
     console.error('Error during migration:', error);
   }
 }
 
-// Run the migration
 migrateDatabase(); 

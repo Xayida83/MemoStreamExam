@@ -3,15 +3,16 @@ import { CustomerService } from '../services/CustomerService.js';
 async function createCustomer() {
   const customerService = new CustomerService();
 
-  // Exempel på hur du kan skapa en ny kund
   const newCustomer = {
-    name: 'Lotta Tänker', // Kundens namn
-    authorizedEmails: ['lindberg.lotta.rebecka@gmail.com'], // Tillåtna e-postadresser som kan skicka e-post
+    name: 'Lottta tänker',
+    email: 'lotta.rebecka.lindberg@gmail.com',
+    urlSlug: 'lottatankar',  // Detta blir URL:en
+    authorizedEmails: ['lotta.lindberg83@gmail.com'],
     settings: {
       allowedAttachmentTypes: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],
       maxAttachmentSize: 10 * 1024 * 1024, // 10MB
       autoProcessEmails: true,
-      notificationEmail: 'notifikation@email.com' // Valfritt: E-post för notifieringar
+      notificationEmail: 'notifikation@email.com'
     }
   };
 
@@ -22,6 +23,7 @@ async function createCustomer() {
     console.log('Kundinformation:');
     console.log('- Namn:', customer.name);
     console.log('- ID:', customer.id);
+    console.log('- URL:', `http://localhost:3000/${customer.urlSlug}`);
     console.log('- Tillåtna e-postadresser:', customer.authorizedEmails.join(', '));
     console.log('- Skapad:', customer.createdAt);
   } catch (error) {

@@ -1,12 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import { EmailController } from './controllers/EmailController.js';
+import { CustomerController } from './controllers/CustomerController.js';
 import { EmailPoller } from './services/EmailPoller.js';
 import { getAuthUrl, getTokens } from './config/gmail.js';
 import path from 'path';
 
 const app = express();
 const emailController = new EmailController();
+const customerController = new CustomerController();
 const emailPoller = new EmailPoller(5 * 60 * 1000); // Poll every 5 minutes
 
 app.use(cors());
@@ -57,6 +59,11 @@ app.get('/api/auth/gmail/callback', async (req, res) => {
     `);
   }
 });
+
+// Customer routes
+app.get('/api/customers/:customerId', (req, res) => customerController.getCustomer(req, res));
+app.post('/api/customers', (req, res) => customerController.createCustomer(req, res));
+app.put('/api/customers/:customerId', (req, res) => customerController.updateCustomer(req, res));
 
 // Email routes
 app.get('/api/emails/:customerId', (req, res) => emailController.getCustomerEmails(req, res));
