@@ -1,9 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UserPage } from './components/UserPage';
-import './components/styles/UserPage.css';
-import './components/styles/AudioPlayer.css';
-import './components/styles/ImageGallery.css';
+import { MatsIMeningarPage } from './pages/MatsIMeningarPage/index.tsx';
 
 function App() {
   return (
@@ -15,15 +12,7 @@ function App() {
         </header>
         <main>
           <Routes>
-            <Route path="/user/:userId" element={<UserPage />} />
-            <Route path="/customer/:customerId" element={<UserPage />} />
-            <Route path="/" element={
-              <div className="welcome">
-                <h2>Välkommen</h2>
-                <p>Ange ditt användar-ID i URL:en för att se ditt innehåll.</p>
-                <p>Exempel: /user/ditt-användar-id</p>
-              </div>
-            } />
+           <Route path="/matsimeningar" element={<MatsIMeningarPage />} />
           </Routes>
         </main>
       </div>
