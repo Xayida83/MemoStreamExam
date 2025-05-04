@@ -4,9 +4,9 @@ async function createCustomer() {
   const customerService = new CustomerService();
 
   const newCustomer = {
-    name: 'Mats i meningar',
-    email: 'lotta.lindberg83@gmail.com',
-    urlSlug: 'matsimeningar',  // Detta blir URL:en
+    name: 'Lottta tänker',
+    email: 'lotta.rebecka.lindberg@gmail.com',
+    urlSlug: 'lottatankar',  // Detta blir URL:en
     authorizedEmails: ['lotta.lindberg83@gmail.com'],
     settings: {
       allowedAttachmentTypes: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],

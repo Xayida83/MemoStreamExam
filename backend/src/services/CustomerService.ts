@@ -34,13 +34,13 @@ export class CustomerService {
   }
 
   /**
-   * Get customer by customer number
+   * Get customer by URL slug
    */
-  async getCustomerByNumber(customerNumber: string): Promise<Customer | null> {
+  async getCustomerBySlug(urlSlug: string): Promise<Customer | null> {
     try {
       const snapshot = await adminDb
         .collection(this.COLLECTION)
-        .where('customerNumber', '==', customerNumber)
+        .where('urlSlug', '==', urlSlug)
         .limit(1)
         .get();
 
@@ -62,8 +62,8 @@ export class CustomerService {
   /**
    * Validate if an email is authorized for a customer
    */
-  async isEmailAuthorized(customerNumber: string, fromEmail: string): Promise<boolean> {
-    const customer = await this.getCustomerByNumber(customerNumber);
+  async isEmailAuthorized(urlSlug: string, fromEmail: string): Promise<boolean> {
+    const customer = await this.getCustomerBySlug(urlSlug);
     if (!customer) {
       return false;
     }
