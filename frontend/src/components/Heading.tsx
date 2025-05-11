@@ -3,7 +3,11 @@ import { fetchCustomer } from '../clients/customerClient';
 import SearchComponent from './SearchComponent';
 import './Heading.css';
 
-const Heading: React.FC = () => {
+interface HeadingProps {
+  onSearch: (query: string) => void;
+}
+
+const Heading: React.FC<HeadingProps> = ({ onSearch }) => {
   const [customerName, setCustomerName] = useState<string>('');
   const [error, setError] = useState<Error | null>(null);
 
@@ -13,11 +17,6 @@ const Heading: React.FC = () => {
       .catch(setError);
   }, []);
 
-  const handleSearch = (query: string) => {
-    // TODO: Implementera sökfunktionalitet
-    console.log('Söker efter:', query);
-  };
-
   if (error) {
     return <div className="heading-error">Kunde inte ladda kundinformation</div>;
   }
@@ -25,7 +24,7 @@ const Heading: React.FC = () => {
   return (
     <header className="heading">
       <h1>{customerName}</h1>
-      <SearchComponent onSearch={handleSearch} />
+      <SearchComponent onSearch={onSearch} />
     </header>
   );
 };

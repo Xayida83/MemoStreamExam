@@ -4,8 +4,13 @@ import { Email } from '../types/Email';
 import EntryComponent from './EntryComponent';
 import EmailCarousel from './EmailCarousel';
 
-const EntryList: React.FC = () => {
+interface EntryListProps {
+  searchQuery?: string;
+}
+
+const EntryList: React.FC<EntryListProps> = ({ searchQuery = '' }) => {
   const [emails, setEmails] = useState<Email[]>([]);
+  const [filteredEmails, setFilteredEmails] = useState<Email[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
 
@@ -17,6 +22,7 @@ const EntryList: React.FC = () => {
           new Date(b.date).getTime() - new Date(a.date).getTime()
         );
         setEmails(sortedEmails);
+        setFilteredEmails(sortedEmails);
         // Välj det senaste emailet som standard
         if (sortedEmails.length > 0) {
           setSelectedEmailId(sortedEmails[0].id);
@@ -24,6 +30,20 @@ const EntryList: React.FC = () => {
       })
       .catch(setError);
   }, []);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredEmails(emails);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase();
+    const filtered = emails.filter(email => 
+      email.subject.toLowerCase().includes(query) ||
+      email.content.toLowerCase().includes(query)
+    );
+    setFilteredEmails(filtered);
+  }, [searchQuery, emails]);
 
   const handleEmailSelect = (emailId: string) => {
     setSelectedEmailId(emailId);
@@ -44,15 +64,21 @@ const EntryList: React.FC = () => {
       />
       
       <div className="all-emails">
-        {emails.map((email) => (
-          <div 
-            key={email.id} 
-            id={`email-${email.id}`}
-            className={`email-entry-container ${selectedEmailId === email.id ? 'selected' : ''}`}
-          >
-            <EntryComponent email={email} />
+        {filteredEmails.length === 0 ? (
+          <div className="no-results">
+            {searchQuery ? 'Inga resultat hittades' : 'Inga e-postmeddelanden tillgängliga'}
           </div>
-        ))}
+        ) : (
+          filteredEmails.map((email) => (
+            <div 
+              key={email.id} 
+              id={`email-${email.id}`}
+              className={`email-entry-container ${selectedEmailId === email.id ? 'selected' : ''}`}
+            >
+              <EntryComponent email={email} />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
