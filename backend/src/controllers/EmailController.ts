@@ -10,7 +10,7 @@ export class EmailController {
   private oauth2Client: OAuth2Client;
   private emailService: EmailService;
   private readonly RECEIVING_EMAIL: string;
-  private tokens: any = null;
+  //private tokens: any = null;
   private gmail: any;
 
   constructor() {
@@ -23,6 +23,7 @@ export class EmailController {
     this.RECEIVING_EMAIL = process.env.RECEIVING_EMAIL || 'memostream.receiver@gmail.com';
     console.log('Konfigurerad e-postadress:', this.RECEIVING_EMAIL);
     this.gmail = google.gmail('v1');
+    
   }
 
   /**
@@ -47,7 +48,7 @@ export class EmailController {
 
     try {
       const { tokens } = await this.oauth2Client.getToken(code as string);
-      this.tokens = tokens;
+      //this.tokens = tokens;
       this.oauth2Client.setCredentials(tokens);
 
       res.send('Autentisering lyckades! Du kan nu stänga detta fönster.');
@@ -70,11 +71,14 @@ export class EmailController {
    */
   async getUserEmails(req: Request, res: Response): Promise<Response | undefined> {
     try {
-      if (!this.tokens) {
+      const credentials = this.oauth2Client.credentials;
+      //if (!this.tokens) {
+      //  return res.status(401).json({ error: 'Ingen autentisering hittad. Vänligen autentisera först.' });
+      //}
+      if (!credentials || !credentials.access_token) {
         return res.status(401).json({ error: 'Ingen autentisering hittad. Vänligen autentisera först.' });
       }
-
-      this.oauth2Client.setCredentials(this.tokens);
+      //this.oauth2Client.setCredentials(credentials);
       const gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
       
       console.log('Söker efter meddelanden till:', this.RECEIVING_EMAIL);
@@ -96,10 +100,11 @@ export class EmailController {
       // Hämta detaljerad information för varje meddelande
       const messages = await Promise.all(
         response.data.messages.map(async (message) => {
-          const messageDetails = await gmail.users.messages.get({
-            userId: 'me',
-            id: message.id!,
-            format: 'full'
+          try {
+            const messageDetails = await gmail.users.messages.get({
+              userId: 'me',
+              id: message.id!,
+              format: 'full'
           });
 
           const headers = messageDetails.data.payload?.headers || [];
@@ -114,8 +119,14 @@ export class EmailController {
             subject,
             date
           };
+          } catch (error: any) {
+            console.error('Fel vid hämtning av meddelande ID ${message.id}:', error);
+            return null;
+          }
         })
       );
+
+      const filteredMessages = messages.filter(msg => msg !== null);
 
       console.log('Processade meddelanden:', messages);
       return res.json({ messages });
@@ -132,51 +143,95 @@ export class EmailController {
   /**
    * Process a specific email
    */
-  async processEmail(req: Request, res: Response): Promise<Response> {
-    try {
-      const { emailId, customerId } = req.params;
+  //async processEmail(req: Request, res: Response): Promise<Response> {
+  //async processEmail(req: Request, res: Response): Promise<Response> {
+    //try {
+      //const { emailId, customerId } = req.params;
 
-      if (!emailId || !customerId) {
-        return res.status(400).json({ 
-          error: 'Email ID and Customer ID are required',
-          code: 'MISSING_PARAMETERS'
-        });
-      }
+      //if (!emailId || !customerId) {
+      //  return res.status(400).json({ 
+      //    error: 'Email ID and Customer ID are required',
+      //    code: 'MISSING_PARAMETERS'
+      //  });
+      //}
 
-      if (!this.tokens) {
-        return res.status(401).json({ 
-          error: 'Authentication required',
-          code: 'UNAUTHORIZED'
-        });
-      }
+      //if (!this.tokens) {
+      //  return res.status(401).json({ 
+      //    error: 'Authentication required',
+      //    code: 'UNAUTHORIZED'
+      //  });
+      //}
 
-      const processedEmail = await this.emailService.processEmail(emailId);
+      //const credentials = this.oauth2Client.credentials;
+      //if (!credentials || !credentials.access_token) {
+      //  return res.status(401).json({
+      //    error: 'Authentication required',
+      //    code: 'UNAUTHORIZED'
+      //  });
+      //}
+
+      //const processedEmail = await this.emailService.processEmail(emailId);
       
-      if (!processedEmail) {
-        return res.status(404).json({ 
-          error: 'Email not found or could not be processed',
-          code: 'EMAIL_NOT_FOUND'
-        });
-      }
+      //if (!processedEmail) {
+      //  return res.status(404).json({ 
+      //    error: 'Email not found or could not be processed',
+      //    code: 'EMAIL_NOT_FOUND'
+      //  });
+      //}
 
-      return res.json(processedEmail);
-    } catch (error: any) {
-      console.error('Error processing email:', error);
+      //return res.json(processedEmail);
+    //} catch (error: any) {
+      //console.error('Error processing email:', error);
       
-      if (error.code === 'NOT_FOUND') {
-        return res.status(404).json({ 
-          error: 'Email not found',
-          code: 'EMAIL_NOT_FOUND'
-        });
-      }
+      //if (error.code === 'NOT_FOUND') {
+      //  return res.status(404).json({ 
+      //    error: 'Email not found',
+      //    code: 'EMAIL_NOT_FOUND'
+      //  });
+      //}
 
-      return res.status(500).json({ 
-        error: 'Failed to process email',
-        code: 'INTERNAL_SERVER_ERROR',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      //return res.status(500).json({ 
+      //  error: 'Failed to process email',
+      //  code: 'INTERNAL_SERVER_ERROR',
+      //  details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      //});
+    //}
+ // }
+ async processEmail(req: Request, res: Response): Promise<Response> {
+  try {
+    const { emailId, customerId } = req.params;
+
+    if (!emailId || !customerId) {
+      return res.status(400).json({
+        error: 'Email ID and Customer ID are required',
+        code: 'MISSING_PARAMETERS'
       });
     }
+
+    // Hämta e-post från databasen
+    const email = await this.emailService.getEmailById(emailId, customerId);
+
+    if (!email) {
+      return res.status(404).json({
+        error: 'Email not found for this customer',
+        code: 'EMAIL_NOT_FOUND'
+      });
+    }
+
+    return res.json({
+      message: 'Email retrieved successfully',
+      email
+    });
+  } catch (error: any) {
+    console.error('Error processing email:', error);
+    return res.status(500).json({
+      error: 'Failed to process email',
+      code: 'INTERNAL_SERVER_ERROR',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
+}
+
 
   async getCustomerEmails(req: Request, res: Response): Promise<Response> {
     try {
@@ -189,14 +244,14 @@ export class EmailController {
         });
       }
 
-      if (!this.tokens) {
-        return res.status(401).json({ 
-          error: 'Authentication required',
-          code: 'UNAUTHORIZED'
-        });
-      }
+      //if (!this.tokens) {
+      //  return res.status(401).json({ 
+      //    error: 'Authentication required',
+      //    code: 'UNAUTHORIZED'
+      //  });
+      //}
 
-      this.oauth2Client.setCredentials(this.tokens);
+      //this.oauth2Client.setCredentials(this.tokens);
 
       const emails = await this.emailService.getCustomerEmails(customerId);
       

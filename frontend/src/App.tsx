@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { MatsIMeningarPage } from './pages/MatsIMeningarPage/index.tsx';
+import EntryComponent from './components/EntryComponent';
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
           <p>Välkommen till MemoStream - ditt verktyg för att publicera innehåll via e-post.</p>
         </header>
         <main>
-          <Routes>
+          <EntryComponent />
+          <Routes>          
            <Route path="/matsimeningar" element={<MatsIMeningarPage />} />
           </Routes>
         </main>

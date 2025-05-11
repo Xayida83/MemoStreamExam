@@ -15,4 +15,4 @@ export interface Attachment {
   url: string;
   mimeType: string;
   size: number;
-} 
+}

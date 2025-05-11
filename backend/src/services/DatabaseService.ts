@@ -36,17 +36,40 @@ export class DatabaseService {
     await emailRef.set(emailData);
   }
 
+  async getEmailsBySenders(authEmails: string[], limitCount: number = 50): Promise<Email[]> {
+    if (authEmails.length === 0) return [];
+  
+    // Firestore supports max 10 items in 'in'-queries
+    const batches: Email[] = [];
+    const chunkSize = 10;
+  
+  for (let i = 0; i < authEmails.length; i += chunkSize) {
+     const batchEmails = authEmails.slice(i, i + chunkSize);
+      const snapshot = await adminDb
+      .collection(this.COLLECTIONS.EMAILS)
+        .where('from', 'in', batchEmails)
+        .limit(limitCount)
+        .get();
+  
+      batches.push(...snapshot.docs.map(doc => ({
+        ...doc.data(), 
+        date: doc.data().date.toDate()
+      } as Email)));
+    }
+    return batches;
+  }
+  
   /**
    * Get all emails for a specific customer
    * @param customerId The customer's ID
    * @param limit Optional limit for pagination
    * @returns Array of emails
    */
-  async getCustomerEmails(customerId: string, limitCount: number = 50): Promise<Email[]> {
+  async getCustomerEmails(authEmail: string, limitCount: number = 50): Promise<Email[]> {
+    // Hämta alla emails där 'from' matchar authEmail direkt från emails-samlingen
     const snapshot = await adminDb
-      .collection(this.COLLECTIONS.CUSTOMERS)
-      .doc(customerId)
       .collection(this.COLLECTIONS.EMAILS)
+      .where('from', '==', authEmail)
       .orderBy('date', 'desc')
       .limit(limitCount)
       .get();

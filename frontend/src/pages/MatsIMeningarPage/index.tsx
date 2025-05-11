@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Header } from '../../components/Header';
-import { PostGallery } from '../../components/PostGallery';
-import { Entry } from '../../components/Entry';
-import { Footer } from '../../components/Footer';
 import { Customer } from '../../types/Customer';
+
 
 export const MatsIMeningarPage = () => {
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -15,6 +12,7 @@ export const MatsIMeningarPage = () => {
       setLoading(true);
       const customerRes = await fetch('/api/customers/matsimeningar');
       setCustomer(await customerRes.json());
+      
       const entrysRes = await fetch('/api/emails/matsimeningar');
       setEntrys(await entrysRes.json());
       setLoading(false);
@@ -30,10 +28,7 @@ export const MatsIMeningarPage = () => {
 
   return (
     <div className="max-w-md mx-auto p-2 font-serif bg-white min-h-screen">
-      <Header name={customer.name} />
-      <PostGallery posts={latestThree} />
-      <Entry entry={latest} />
-      <Footer />
+      <h1 className="text-2xl font-bold mb-4">{customer.name}</h1>
     </div>
   );
 }; 
