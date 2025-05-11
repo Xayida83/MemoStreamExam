@@ -1,30 +1,51 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
-import { fetchEmails } from '../clients/emailClient';
 import { Email } from '../types/Email';
+import AttachmentComponent from './AttachmentComponent';
 
-const EmailList = () => {
-  const [emails, setEmails] = useState<Email[]>([]);
-  const [error, setError] = useState<Error | null>(null);
+interface EntryComponentProps {
+  email: Email;
+}
 
-  useEffect(() => {
-    fetchEmails()
-      .then(setEmails)
-      .catch(setError);
-  }, []);
-
-  if (error) return <p>Ett fel inträffade: {error.message}</p>;
+const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
+  const getAttachmentUrl = (url: string) => {
+    // Om URL:en redan är en fullständig URL, returnera den som den är
+    if (url.startsWith('http')) {
+      return url;
+    }
+    // Annars lägg till backend-URL:en
+    const fullUrl = `http://localhost:5000${url}`;
+    console.log('Attachment URL:', fullUrl); // Debugging
+    return fullUrl;
+  };
 
   return (
-    <div>
-      <h2>Mina Email</h2>
-      <ul>
-        {emails.map((email) => (
-          <li key={email.id}>{email.subject}</li>
-        ))}
-      </ul>
+    <div className="email-entry">
+      <div className="email-header">
+        <h3>{email.subject}</h3>
+        <div className="email-meta">
+          <p>Datum:{new Date(email.date).toLocaleString('sv-SE')}</p>
+        </div>
+      </div>
+      
+      <div className="email-content">
+        <p>{email.content}</p>
+      </div>
+
+      {email.attachments.length > 0 && (
+        <div className="email-attachments">
+          <h4>Bilagor:</h4>
+          <div className="attachments-list">
+            {email.attachments.map((attachment) => (
+              <AttachmentComponent 
+                key={attachment.id} 
+                attachment={attachment} 
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default EmailList;
+export default EntryComponent;
