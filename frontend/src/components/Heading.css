@@ -1,4 +1,5 @@
 .heading {
+  display: flex;
   background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
   color: white;
   padding: 2rem 0;

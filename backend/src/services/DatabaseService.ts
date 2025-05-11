@@ -11,6 +11,19 @@ export class DatabaseService {
   };
 
   /**
+   * Extracts the first paragraph from email content
+   * @param content The email content
+   * @returns The first paragraph or empty string if no content
+   */
+  private extractFirstParagraph(content: string): string {
+    if (!content) return '';
+    
+    // Split by double newlines to get paragraphs
+    const paragraphs = content.split(/\n\s*\n/);
+    return paragraphs[0]?.trim() || '';
+  }
+
+  /**
    * Save a customer to the database
    * @param customer The customer to save
    */
@@ -29,8 +42,11 @@ export class DatabaseService {
    */
   async saveEmail(email: Email): Promise<void> {
     const emailRef = adminDb.collection(this.COLLECTIONS.EMAILS).doc(email.id);
+    const firstParagraph = this.extractFirstParagraph(email.content);
+    
     const emailData = {
       ...email,
+      firstParagraph,
       date: Timestamp.fromDate(new Date(email.date))
     };
     await emailRef.set(emailData);

@@ -1,29 +1,22 @@
 .carousel-container {
   width: 100%;
-  padding: 20px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
   background: #f5f5f5;
   margin-bottom: 30px;
   user-select: none; 
 }
 
 .carousel {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 300px;
-  gap: 20px;
+  display: flex;
   overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scroll-padding: 20px;
-  padding: 20px;
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
-  cursor: grab; /* Visar att elementet kan dras */
-}
-
-.carousel:active {
-  cursor: grabbing; /* Visar att elementet dras */
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .carousel::-webkit-scrollbar {
@@ -31,12 +24,14 @@
 }
 
 .carousel-item {
-  scroll-snap-align: start;
+  flex: 0 0 auto;
+  width: 300px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+  scroll-snap-align: start;
   overflow: hidden;
   user-select: none; /* Förhindrar textmarkering vid drag */
 }

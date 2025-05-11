@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { fetchEmails } from '../clients/emailClient';
 import { Email } from '../types/Email';
 import EntryComponent from './EntryComponent';
-import EmailCarousel from './EmailCarousel';
+import { EmailCarousel } from './EmailCarousel';
+import './EntryList.css';
 
 interface EntryListProps {
   searchQuery?: string;
