@@ -33,7 +33,6 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
 
       {email.attachments.length > 0 && (
         <div className="email-attachments">
-          <h4>Bilagor:</h4>
           <div className="attachments-list">
             {email.attachments.map((attachment) => (
               <AttachmentComponent 

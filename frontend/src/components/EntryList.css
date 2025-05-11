@@ -19,7 +19,7 @@
 
 .email-entry-container.selected {
   background-color: #f8f9fa;
-  box-shadow: 0 0 0 2px #1976d2;
+  box-shadow: 3px 5px 10px 6px #a0bad3;
 }
 
 /* Responsive design */

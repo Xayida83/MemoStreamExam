@@ -4,5 +4,8 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.1.0",
     "react-material-ui-carousel": "^3.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.17"
   }
 }
