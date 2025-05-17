@@ -1,0 +1,94 @@
+.carousel-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  margin-bottom: 30px;
+  user-select: none; 
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  width: 300px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  scroll-snap-align: start;
+  overflow: hidden;
+  user-select: none; /* Förhindrar textmarkering vid drag */
+}
+
+.carousel-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-content {
+  padding: 20px;
+  pointer-events: none; /* Förhindrar att innehållet stöter drag-funktionen */
+}
+
+.carousel-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+  color: #333;
+  line-height: 1.4;
+}
+
+.carousel-content .date {
+  font-size: 0.9em;
+  color: #666;
+  margin: 0 0 10px 0;
+}
+
+.carousel-content .preview {
+  font-size: 0.95em;
+  color: #444;
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.attachment-count {
+  display: inline-block;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .carousel {
+    grid-auto-columns: 250px;
+  }
+  
+  .carousel-content h3 {
+    font-size: 1.1em;
+  }
+  
+  .carousel-content .preview {
+    -webkit-line-clamp: 2;
+  }
+} 

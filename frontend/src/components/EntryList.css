@@ -1,0 +1,36 @@
+.entry-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.all-emails {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 0 7rem;
+}
+
+.email-entry-container {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.email-entry-container.selected {
+  background-color: #f8f9fa;
+  box-shadow: 0px 1px 9px 4px #a0bad3;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .entry-list {
+    padding: 10px;
+  }
+  .all-emails{
+    margin: 0 auto;
+  }
+  .email-entry-container {
+    padding: 15px;
+  }
+} 

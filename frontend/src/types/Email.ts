@@ -5,6 +5,7 @@ export interface Email {
   to: string;
   date: string;
   content: string;
+  firstParagraph: string;
   attachments: Attachment[];
   processedAt: string;
 }
@@ -15,4 +16,4 @@ export interface Attachment {
   url: string;
   mimeType: string;
   size: number;
-} 
+}

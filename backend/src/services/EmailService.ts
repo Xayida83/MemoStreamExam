@@ -127,6 +127,21 @@ export class EmailService {
     console.log('Email validation successful');
   }
 
+  async getEmailById(emailId: string, customerId: string): Promise<Email | null> {
+    const email = await this.databaseService.getEmailById(emailId);
+    if (!email) return null;
+  
+    // Verifiera att email.from finns i kundens authorizedEmails
+    const customer = await this.customerService.getCustomerById(customerId);
+    if (!customer) return null;
+  
+    const isAuthorized = customer.authorizedEmails.some(authEmail =>
+      authEmail.toLowerCase() === email.from.toLowerCase()
+    );
+  
+    return isAuthorized ? email : null;
+  }
+  
   /**
    * Get all emails for a customer
    * @param customerId The customer's ID
@@ -134,12 +149,12 @@ export class EmailService {
    */
   async getCustomerEmails(customerId: string): Promise<Email[]> {
     try {
-      const customer = await this.customerService.getCustomerByNumber(customerId);
+      const customer = await this.customerService.getCustomerById(customerId);
       if (!customer) {
         throw new Error('Customer not found');
       }
-
-      const emails = await this.databaseService.getCustomerEmails(customerId);
+//Denna metod ska ta emot AuthEmail från Customer och skicka in detta som en parameter till denna metoden
+      const emails = await this.databaseService.getEmailsBySenders(customer.authorizedEmails);
       if (!emails || emails.length === 0) {
         throw new Error('No emails found for this customer');
       }

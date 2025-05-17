@@ -43,6 +43,21 @@ export class CustomerController {
     try {
       const customerData = req.body;
 
+      if (!customerData.id) {
+        return res.status(400).json({
+          error: 'Customer ID is required',
+          code: 'MISSING_CUSTOMER_ID'
+        });
+      }
+
+      const existingCustomer = await this.customerService.getCustomerById(customerData.id);
+      if (existingCustomer) {
+        return res.status(409).json({
+          error: 'Customer ID already exists',
+          code: 'DUPLICATE_CUSTOMER_ID'
+        });
+      }
+
       const customer = await this.customerService.createCustomer(customerData);
       return res.status(201).json(customer);
     } catch (error: any) {

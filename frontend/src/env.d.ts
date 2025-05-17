@@ -9,8 +9,17 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_APP_ID: string
   readonly VITE_GOOGLE_CLIENT_ID: string
   readonly VITE_GOOGLE_CLIENT_SECRET: string
+  readonly VITE_BASE_ADDRESS: string
+  // Mer miljövariabler kan läggas till här
+  [key: string]: string | undefined
 }
 
 interface ImportMeta {
   readonly env: ImportMetaEnv
+}
+
+declare module 'vite' {
+  interface ImportMeta {
+    readonly env: ImportMetaEnv
+  }
 } 

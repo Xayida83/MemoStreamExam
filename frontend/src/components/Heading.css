@@ -1,0 +1,38 @@
+.heading {
+  display: flex;
+  background: linear-gradient(177deg, #668FCF 10%, #8BC34A 100%);
+  color: white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.heading h1 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.heading-error {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  border-radius: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .heading {
+    padding: 1.5rem 0;
+  }
+
+  .heading h1 {
+    font-size: 2rem;
+    padding: 0 15px;
+  }
+} 
