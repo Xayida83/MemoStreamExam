@@ -7,9 +7,10 @@ import './EntryList.css';
 
 interface EntryListProps {
   searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
-const EntryList: React.FC<EntryListProps> = ({ searchQuery = '' }) => {
+const EntryList: React.FC<EntryListProps> = ({ searchQuery = '', onSearchChange }) => {
   const [emails, setEmails] = useState<Email[]>([]);
   const [filteredEmails, setFilteredEmails] = useState<Email[]>([]);
   const [error, setError] = useState<Error | null>(null);
@@ -24,7 +25,7 @@ const EntryList: React.FC<EntryListProps> = ({ searchQuery = '' }) => {
         );
         setEmails(sortedEmails);
         setFilteredEmails(sortedEmails);
-        // Välj det senaste emailet som standard
+        // Set the most recent email as selected by default
         if (sortedEmails.length > 0) {
           setSelectedEmailId(sortedEmails[0].id);
         }
@@ -48,7 +49,11 @@ const EntryList: React.FC<EntryListProps> = ({ searchQuery = '' }) => {
 
   const handleEmailSelect = (emailId: string) => {
     setSelectedEmailId(emailId);
-    // Scrolla till det valda emailet
+    // Clear search when selecting an email from carousel
+    if (onSearchChange) {
+      onSearchChange('');
+    }
+    // Scroll to the selected email
     const element = document.getElementById(`email-${emailId}`);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -56,6 +61,11 @@ const EntryList: React.FC<EntryListProps> = ({ searchQuery = '' }) => {
   };
 
   if (error) return <p>Ett fel inträffade: {error.message}</p>;
+
+  // Determine which emails to display
+  const displayEmails = searchQuery.trim() 
+    ? filteredEmails // Show all matching emails during search
+    : emails.filter(email => email.id === selectedEmailId); // Show only selected email when not searching
 
   return (
     <div className="entry-list">
@@ -65,16 +75,16 @@ const EntryList: React.FC<EntryListProps> = ({ searchQuery = '' }) => {
       />
       
       <div className="all-emails">
-        {filteredEmails.length === 0 ? (
+        {displayEmails.length === 0 ? (
           <div className="no-results">
             {searchQuery ? 'Inga resultat hittades' : 'Inga e-postmeddelanden tillgängliga'}
           </div>
         ) : (
-          filteredEmails.map((email) => (
+          displayEmails.map((email) => (
             <div 
               key={email.id} 
               id={`email-${email.id}`}
-              className={`email-entry-container ${selectedEmailId === email.id ? 'selected' : ''}`}
+              className={`email-entry-container ${!searchQuery.trim() && selectedEmailId === email.id ? 'selected' : ''}`}
             >
               <EntryComponent email={email} />
             </div>

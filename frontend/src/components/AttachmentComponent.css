@@ -1,11 +1,35 @@
-
 .attachments-list {
   display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 5rem;
 }
 .attachment-container{
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
+.song-name{
+  font-size: 1rem;
+}
 
+.audio-error {
+  padding: 10px;
+  background-color: #fff3f3;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  color: #e55757;
+  margin: 10px 0;
+  max-width: 268px;
+}
+
+.audio-error a {
+  color: #668fcf;
+  text-decoration: underline;
+  margin-left: 5px;
+}
+
+.audio-error a:hover {
+  color: #1565c0;
+}

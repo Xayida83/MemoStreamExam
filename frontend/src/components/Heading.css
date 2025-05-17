@@ -3,8 +3,8 @@
   background: linear-gradient(177deg, #668FCF 10%, #8BC34A 100%);
   color: white;
   padding: 2rem 0;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 8px 13px 10px 0px rgb(0 0 0 / 16%);
+  margin-top: 1rem;
 }
 
 .heading h1 {
@@ -29,6 +29,8 @@
 @media (max-width: 768px) {
   .heading {
     padding: 1.5rem 0;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .heading h1 {

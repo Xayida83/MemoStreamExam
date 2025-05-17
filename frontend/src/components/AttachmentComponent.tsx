@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Attachment } from '../types/Email';
 import './AttachmentComponent.css';
 
@@ -7,6 +7,8 @@ interface AttachmentComponentProps {
 }
 
 const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment }) => {
+  const [audioError, setAudioError] = useState(false);
+
   const getAttachmentUrl = (url: string) => {
     if (url.startsWith('http')) {
       return url;
@@ -39,10 +41,10 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
           />
           {/*<div className="attachment-info">
             <a href={url} target="_blank" rel="noopener noreferrer">
-              {attachment.filename}
+              {attachment.filename.split(/[.(]/)[0]}
             </a>
-            <span>({Math.round(attachment.size / 1024)} KB)</span>
-          </div> */}
+            <span>({Math.round(attachment.size / 1024)} KB)</span>*
+          </div>*/}
         </div>
       );
     }
@@ -57,12 +59,12 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
             <source src={url} type={attachment.mimeType} />
             Din webbläsare stödjer inte video-taggen.
           </video>
-          {/* <div className="attachment-info">
+          <div className="attachment-info">
             <a href={url} target="_blank" rel="noopener noreferrer">
-              {attachment.filename}
+              {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
             </a>
             <span>({Math.round(attachment.size / 1024)} KB)</span>
-          </div> */}
+          </div>
         </div>
       );
     }
@@ -70,16 +72,28 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
     if (isAudio(attachment.mimeType)) {
       return (
         <div className="attachment-audio">
-          <audio controls>
-            <source src={url} type={attachment.mimeType} />
-            Din webbläsare stödjer inte audio-taggen.
-          </audio>
-          {/* <div className="attachment-info">
-            <a href={url} target="_blank" rel="noopener noreferrer">
-              {attachment.filename}
-            </a>
-            <span>({Math.round(attachment.size / 1024)} KB)</span>
-          </div> */}
+          {!audioError ? (
+            <audio 
+              controls 
+              onError={() => setAudioError(true)}
+            >
+              <source src={url} type={attachment.mimeType} />
+              Din webbläsare stödjer inte audio-taggen.
+            </audio>
+          ) : (
+            <div className="audio-error">
+              Ljudfilen kunde inte spelas upp. 
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                Klicka här för att ladda ner
+              </a>
+            </div>
+          )}
+          <div className="attachment-info">
+            <p className='song-name'> Ljud:
+              {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
+            </p>
+            {/*<span>({Math.round(attachment.size / 1024)} KB)</span>*/}
+          </div> 
         </div>
       );
     }
@@ -88,11 +102,8 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
     return (
       <div className="attachment-file">
         <a href={url} target="_blank" rel="noopener noreferrer">
-          {attachment.filename}
+          {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
         </a>
-        {/*<span className="attachment-info">
-          ({Math.round(attachment.size / 1024)} KB)
-        </span> */}
       </div>
     );
   };

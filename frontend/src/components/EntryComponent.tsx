@@ -19,12 +19,11 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
   };
 
   return (
-    <div className="email-entry" style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className="email-entry">
       <div className="email-header">
-        <div className="email-meta" style={{ textAlign: 'right', padding: '0px'	 }}>
+        <div className="email-meta">
           <p>Datum: {new Date(email.date).toLocaleDateString('sv-SE')}</p>
         </div>
-        
         <h3>{email.subject}</h3> 
       </div>
       {email.attachments.length > 0 && (
@@ -39,11 +38,9 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
           </div>
         </div>
       )}
-      <div className="email-content" style={{ whiteSpace: 'pre-wrap' }}>
+      <div className="email-content">
         <p>{email.content}</p>
       </div>
-
-      
     </div>
   );
 };

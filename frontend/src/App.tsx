@@ -13,7 +13,7 @@ function App() {
       <div className="app">
         <Heading onSearch={setSearchQuery} />
         <main>
-          <EntryList searchQuery={searchQuery} />
+          <EntryList searchQuery={searchQuery} onSearchChange={setSearchQuery} />
           <ContactFormComponent />
           <Routes>          
             <Route path="/matsimeningar" element={<MatsIMeningarPage />} />
