@@ -36,12 +36,12 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
             alt={attachment.filename}
             style={{ maxWidth: '100%', maxHeight: '300px' }}
           />
-          <div className="attachment-info">
+          {/*<div className="attachment-info">
             <a href={url} target="_blank" rel="noopener noreferrer">
               {attachment.filename}
             </a>
             <span>({Math.round(attachment.size / 1024)} KB)</span>
-          </div>
+          </div> */}
         </div>
       );
     }
@@ -56,12 +56,12 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
             <source src={url} type={attachment.mimeType} />
             Din webbläsare stödjer inte video-taggen.
           </video>
-          <div className="attachment-info">
+          {/* <div className="attachment-info">
             <a href={url} target="_blank" rel="noopener noreferrer">
               {attachment.filename}
             </a>
             <span>({Math.round(attachment.size / 1024)} KB)</span>
-          </div>
+          </div> */}
         </div>
       );
     }
@@ -73,12 +73,12 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
             <source src={url} type={attachment.mimeType} />
             Din webbläsare stödjer inte audio-taggen.
           </audio>
-          <div className="attachment-info">
+          {/* <div className="attachment-info">
             <a href={url} target="_blank" rel="noopener noreferrer">
               {attachment.filename}
             </a>
             <span>({Math.round(attachment.size / 1024)} KB)</span>
-          </div>
+          </div> */}
         </div>
       );
     }
@@ -89,9 +89,9 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
         <a href={url} target="_blank" rel="noopener noreferrer">
           {attachment.filename}
         </a>
-        <span className="attachment-info">
+        {/*<span className="attachment-info">
           ({Math.round(attachment.size / 1024)} KB)
-        </span>
+        </span> */}
       </div>
     );
   };

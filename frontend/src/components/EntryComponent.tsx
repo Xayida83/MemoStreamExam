@@ -19,15 +19,15 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
   };
 
   return (
-    <div className="email-entry">
+    <div className="email-entry" style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="email-header">
-        <h3>{email.subject}</h3>
-        <div className="email-meta">
-          <p>Datum:{new Date(email.date).toLocaleString('sv-SE')}</p>
+        <div className="email-meta" style={{ textAlign: 'right', padding: '0px'	 }}>
+          <p>Datum: {new Date(email.date).toLocaleString('sv-SE')}</p>
         </div>
+        <h3>{email.subject}</h3> 
       </div>
       
-      <div className="email-content">
+      <div className="email-content" style={{ whiteSpace: 'pre-wrap' }}>
         <p>{email.content}</p>
       </div>
 
