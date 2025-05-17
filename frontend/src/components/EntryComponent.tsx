@@ -22,15 +22,11 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
     <div className="email-entry" style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="email-header">
         <div className="email-meta" style={{ textAlign: 'right', padding: '0px'	 }}>
-          <p>Datum: {new Date(email.date).toLocaleString('sv-SE')}</p>
+          <p>Datum: {new Date(email.date).toLocaleDateString('sv-SE')}</p>
         </div>
+        
         <h3>{email.subject}</h3> 
       </div>
-      
-      <div className="email-content" style={{ whiteSpace: 'pre-wrap' }}>
-        <p>{email.content}</p>
-      </div>
-
       {email.attachments.length > 0 && (
         <div className="email-attachments">
           <div className="attachments-list">
@@ -43,6 +39,11 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
           </div>
         </div>
       )}
+      <div className="email-content" style={{ whiteSpace: 'pre-wrap' }}>
+        <p>{email.content}</p>
+      </div>
+
+      
     </div>
   );
 };

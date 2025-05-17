@@ -1,5 +1,6 @@
 import React from 'react';
 import { Attachment } from '../types/Email';
+import './AttachmentComponent.css';
 
 interface AttachmentComponentProps {
   attachment: Attachment;

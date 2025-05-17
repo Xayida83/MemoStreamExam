@@ -1,0 +1,11 @@
+
+.attachments-list {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+.attachment-container{
+  display: flex;
+  align-items: center;
+}
+

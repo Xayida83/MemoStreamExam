@@ -11,6 +11,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch }) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(searchQuery);
+    setSearchQuery('');
   };
 
   return (
