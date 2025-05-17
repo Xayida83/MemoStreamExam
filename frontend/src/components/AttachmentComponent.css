@@ -13,7 +13,9 @@
 }
 
 .song-name {
-  font-size: var(--font-size-base);
+  font-size: inherit;
+  font-family: inherit;
+  margin: 0;
 }
 
 .audio-error {
@@ -53,6 +55,8 @@
 .attachment-info {
   color: var(--text-light);
   font-size: var(--font-size-small);
+  text-align: center;
+  font-family: var(--font-primary);
 }
 
 .attachment-info a {

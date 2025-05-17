@@ -2,6 +2,8 @@
 
 MemoStream är en applikation för att hantera och automatisera e-postkommunikation med kunder.
 
+
+
 ## Funktioner (Sprint 1)
 
 - ✅ Automatisk hämtning av e-post från Gmail

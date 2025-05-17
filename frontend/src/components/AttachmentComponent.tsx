@@ -8,25 +8,24 @@ interface AttachmentComponentProps {
 }
 
 const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment }) => {
-  const [audioError, setAudioError] = useState(false);
+  const [audioError, setAudioError] = useState<string | null>(null);
 
   const renderAttachment = () => {
     const url = getAttachmentUrl(attachment.url);
-    const fileType = getFileTypeLabel(attachment.mimeType);
     const displayName = cleanFilename(attachment.filename);
+    const fileTypeLabel = getFileTypeLabel(attachment.mimeType);
 
     if (isImage(attachment.mimeType)) {
       return (
         <div className="attachment-image">
           <img 
             src={url} 
-            alt={`${fileType}: ${displayName}`}
+            alt={`Bild: ${displayName}`}
             loading="lazy"
+            aria-label={`Bild: ${displayName}`}
           />
           <div className="attachment-info">
-            <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Öppna ${fileType}: ${displayName}`}>
-              {displayName}
-            </a>
+            <p>{fileTypeLabel}: {displayName}</p>
           </div>
         </div>
       );
@@ -35,18 +34,12 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
     if (isVideo(attachment.mimeType)) {
       return (
         <div className="attachment-video">
-          <video 
-            controls
-            aria-label={`${fileType}: ${displayName}`}
-          >
+          <video controls aria-label={`Video: ${displayName}`}>
             <source src={url} type={attachment.mimeType} />
             Din webbläsare stödjer inte video-taggen.
           </video>
           <div className="attachment-info">
-            <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Öppna ${fileType}: ${displayName}`}>
-              {displayName}
-            </a>
-            <span>({Math.round(attachment.size / 1024)} KB)</span>
+            <p>{fileTypeLabel}: {displayName}</p>
           </div>
         </div>
       );
@@ -55,37 +48,41 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
     if (isAudio(attachment.mimeType)) {
       return (
         <div className="attachment-audio">
-          {!audioError ? (
-            <audio 
-              controls 
-              onError={() => setAudioError(true)}
-              aria-label={`${fileType}: ${displayName}`}
-            >
-              <source src={url} type={attachment.mimeType} />
-              Din webbläsare stödjer inte audio-taggen.
-            </audio>
-          ) : (
+          <audio 
+            controls 
+            aria-label={`${fileTypeLabel}: ${displayName}`}
+            onError={(e) => {
+              const target = e.target as HTMLAudioElement;
+              setAudioError(target.error?.message || 'Ett fel uppstod vid uppspelning av ljudfilen');
+            }}
+          >
+            <source src={url} type={attachment.mimeType} />
+            Din webbläsare stödjer inte audio-taggen.
+          </audio>
+          {audioError && (
             <div className="audio-error" role="alert">
-              Ljudfilen kunde inte spelas upp. 
-              <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Ladda ner ${fileType}: ${displayName}`}>
-                Klicka här för att ladda ner
+              {audioError}
+              <a href={url} target="_blank" rel="noopener noreferrer" aria-label="Öppna ljudfil i nytt fönster">
+                Öppna fil
               </a>
             </div>
           )}
           <div className="attachment-info">
-            <p className='song-name'> {fileType}:
-              {displayName}
-            </p>
-          </div> 
+            <p className="song-name">{fileTypeLabel}: {displayName}</p>
+          </div>
         </div>
       );
     }
 
-    // För andra filtyper, visa bara en länk
     return (
       <div className="attachment-file">
-        <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Öppna ${fileType}: ${displayName}`}>
-          {displayName}
+        <a 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          aria-label={`Öppna ${fileTypeLabel}: ${displayName}`}
+        >
+          {fileTypeLabel}: {displayName}
         </a>
       </div>
     );

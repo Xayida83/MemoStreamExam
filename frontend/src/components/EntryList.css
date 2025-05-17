@@ -54,6 +54,7 @@
   font-weight: 500;
   margin: var(--spacing-xs) 0;
   color: var(--text-color);
+  text-align: center;
 }
 
 .email-attachments {
