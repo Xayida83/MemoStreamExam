@@ -28,21 +28,31 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
     return mimeType.startsWith('audio/');
   };
 
+  const getFileTypeLabel = (mimeType: string) => {
+    if (isImage(mimeType)) return 'Bild';
+    if (isVideo(mimeType)) return 'Video';
+    if (isAudio(mimeType)) return 'Ljud';
+    return 'Fil';
+  };
+
   const renderAttachment = () => {
     const url = getAttachmentUrl(attachment.url);
+    const fileType = getFileTypeLabel(attachment.mimeType);
+    const displayName = attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0];
 
     if (isImage(attachment.mimeType)) {
       return (
         <div className="attachment-image">
           <img 
             src={url} 
-            alt={attachment.filename}
+            alt={`${fileType}: ${displayName}`}
+            loading="lazy"
           />
           <div className="attachment-info">
-            <a href={url} target="_blank" rel="noopener noreferrer">
-              {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
+            <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Öppna ${fileType}: ${displayName}`}>
+              {displayName}
             </a>
-            <span>({Math.round(attachment.size / 1024)} KB)</span>
+            {/*<span>({Math.round(attachment.size / 1024)} KB)</span>*/}
           </div>
         </div>
       );
@@ -53,13 +63,14 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
         <div className="attachment-video">
           <video 
             controls
+            aria-label={`${fileType}: ${displayName}`}
           >
             <source src={url} type={attachment.mimeType} />
             Din webbläsare stödjer inte video-taggen.
           </video>
           <div className="attachment-info">
-            <a href={url} target="_blank" rel="noopener noreferrer">
-              {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
+            <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Öppna ${fileType}: ${displayName}`}>
+              {displayName}
             </a>
             <span>({Math.round(attachment.size / 1024)} KB)</span>
           </div>
@@ -74,21 +85,22 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
             <audio 
               controls 
               onError={() => setAudioError(true)}
+              aria-label={`${fileType}: ${displayName}`}
             >
               <source src={url} type={attachment.mimeType} />
               Din webbläsare stödjer inte audio-taggen.
             </audio>
           ) : (
-            <div className="audio-error">
+            <div className="audio-error" role="alert">
               Ljudfilen kunde inte spelas upp. 
-              <a href={url} target="_blank" rel="noopener noreferrer">
+              <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Ladda ner ${fileType}: ${displayName}`}>
                 Klicka här för att ladda ner
               </a>
             </div>
           )}
           <div className="attachment-info">
-            <p className='song-name'> Ljud:
-              {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
+            <p className='song-name'> {fileType}:
+              {displayName}
             </p>
           </div> 
         </div>
@@ -98,8 +110,8 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
     // För andra filtyper, visa bara en länk
     return (
       <div className="attachment-file">
-        <a href={url} target="_blank" rel="noopener noreferrer">
-          {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
+        <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Öppna ${fileType}: ${displayName}`}>
+          {displayName}
         </a>
       </div>
     );

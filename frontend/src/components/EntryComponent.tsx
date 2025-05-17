@@ -19,15 +19,17 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
   };
 
   return (
-    <div className="email-entry">
-      <div className="email-header">
+    <article className="email-entry" aria-labelledby={`email-subject-${email.id}`}>
+      <header className="email-header">
         <div className="email-meta">
-          <p>Datum: {new Date(email.date).toLocaleDateString('sv-SE')}</p>
+          <time dateTime={email.date}>
+            Datum: {new Date(email.date).toLocaleDateString('sv-SE')}
+          </time>
         </div>
-        <h3>{email.subject}</h3> 
-      </div>
+        <h3 id={`email-subject-${email.id}`}>{email.subject}</h3> 
+      </header>
       {email.attachments.length > 0 && (
-        <div className="email-attachments">
+        <section className="email-attachments" aria-label="Bilagor">
           <div className="attachments-list">
             {email.attachments.map((attachment) => (
               <AttachmentComponent 
@@ -36,12 +38,17 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
               />
             ))}
           </div>
-        </div>
+        </section>
       )}
-      <div className="email-content">
+      <div 
+        className="email-content"
+        tabIndex={0}
+        role="article"
+        aria-label={`Innehåll i e-post: ${email.subject}`}
+      >
         <p>{email.content}</p>
       </div>
-    </div>
+    </article>
   );
 };
 
