@@ -61,10 +61,7 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
           </audio>
           {audioError && (
             <div className="audio-error" role="alert">
-              {audioError}
-              <a href={url} target="_blank" rel="noopener noreferrer" aria-label="Öppna ljudfil i nytt fönster">
-                Öppna fil
-              </a>
+              {audioError}              
             </div>
           )}
           <div className="attachment-info">
