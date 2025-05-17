@@ -1,0 +1,11 @@
+.error-message {
+  padding: var(--spacing-sm);
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: var(--border-radius);
+  color: var(--error-color);
+  margin: var(--spacing-sm) 0;
+  max-width: var(--content-max-width);
+  margin-left: auto;
+  margin-right: auto;
+} 

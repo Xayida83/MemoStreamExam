@@ -1,0 +1,10 @@
+.external-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition-base);
+}
+
+.external-link:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+} 

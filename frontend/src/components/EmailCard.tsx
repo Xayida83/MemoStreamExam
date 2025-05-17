@@ -1,5 +1,6 @@
 import React from 'react';
 import { Email } from '../types/Email';
+import { getAttachmentUrl, cleanFilename, isImage } from '../utils/commonUtils';
 import './EmailCard.css';
 
 interface EmailCardProps {
@@ -8,22 +9,11 @@ interface EmailCardProps {
 
 export const EmailCard: React.FC<EmailCardProps> = ({ email }) => {
   const firstImageAttachment = email.attachments?.find(
-    attachment => attachment.mimeType.startsWith('image/')
+    attachment => isImage(attachment.mimeType)
   );
 
-  const getAttachmentUrl = (url: string) => {
-    if (url.startsWith('http')) {
-      return url;
-    }
-    return `http://localhost:5000${url}`;
-  };
-
-  const getDisplayName = (filename: string) => {
-    return filename.replace(/^\d+/, '').split(/[.(]/)[0];
-  };
-
   const getImageDescription = (filename: string, subject: string) => {
-    const displayName = getDisplayName(filename);
+    const displayName = cleanFilename(filename);
     return `Bild från e-post med ämne "${subject}". Bilden är en ${displayName}.`;
   };
 

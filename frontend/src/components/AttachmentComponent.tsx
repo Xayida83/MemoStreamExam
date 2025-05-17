@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Attachment } from '../types/Email';
+import { getAttachmentUrl, cleanFilename, isImage, isVideo, isAudio, getFileTypeLabel } from '../utils/commonUtils';
 import './AttachmentComponent.css';
 
 interface AttachmentComponentProps {
@@ -9,36 +10,10 @@ interface AttachmentComponentProps {
 const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment }) => {
   const [audioError, setAudioError] = useState(false);
 
-  const getAttachmentUrl = (url: string) => {
-    if (url.startsWith('http')) {
-      return url;
-    }
-    return `http://localhost:5000${url}`;
-  };
-
-  const isImage = (mimeType: string) => {
-    return mimeType.startsWith('image/');
-  };
-
-  const isVideo = (mimeType: string) => {
-    return mimeType.startsWith('video/');
-  };
-
-  const isAudio = (mimeType: string) => {
-    return mimeType.startsWith('audio/');
-  };
-
-  const getFileTypeLabel = (mimeType: string) => {
-    if (isImage(mimeType)) return 'Bild';
-    if (isVideo(mimeType)) return 'Video';
-    if (isAudio(mimeType)) return 'Ljud';
-    return 'Fil';
-  };
-
   const renderAttachment = () => {
     const url = getAttachmentUrl(attachment.url);
     const fileType = getFileTypeLabel(attachment.mimeType);
-    const displayName = attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0];
+    const displayName = cleanFilename(attachment.filename);
 
     if (isImage(attachment.mimeType)) {
       return (
@@ -52,7 +27,6 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
             <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Öppna ${fileType}: ${displayName}`}>
               {displayName}
             </a>
-            {/*<span>({Math.round(attachment.size / 1024)} KB)</span>*/}
           </div>
         </div>
       );
