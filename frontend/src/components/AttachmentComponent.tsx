@@ -37,14 +37,13 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
           <img 
             src={url} 
             alt={attachment.filename}
-            style={{ maxWidth: '100%', maxHeight: '300px' }}
           />
-          {/*<div className="attachment-info">
+          <div className="attachment-info">
             <a href={url} target="_blank" rel="noopener noreferrer">
-              {attachment.filename.split(/[.(]/)[0]}
+              {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
             </a>
-            <span>({Math.round(attachment.size / 1024)} KB)</span>*
-          </div>*/}
+            <span>({Math.round(attachment.size / 1024)} KB)</span>
+          </div>
         </div>
       );
     }
@@ -53,8 +52,7 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
       return (
         <div className="attachment-video">
           <video 
-            controls 
-            style={{ maxWidth: '100%', maxHeight: '300px' }}
+            controls
           >
             <source src={url} type={attachment.mimeType} />
             Din webbläsare stödjer inte video-taggen.
@@ -92,7 +90,6 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
             <p className='song-name'> Ljud:
               {attachment.filename.replace(/^\d+/, '').split(/[.(]/)[0]}
             </p>
-            {/*<span>({Math.round(attachment.size / 1024)} KB)</span>*/}
           </div> 
         </div>
       );
