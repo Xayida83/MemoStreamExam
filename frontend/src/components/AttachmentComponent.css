@@ -1,45 +1,72 @@
 .attachments-list {
   display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    flex-direction: column;
-    gap: 5rem;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: var(--spacing-xl);
 }
-.attachment-container{
+
+.attachment-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.song-name{
-  font-size: 1rem;
+
+.song-name {
+  font-size: var(--font-size-base);
 }
 
 .audio-error {
-  padding: 10px;
-  background-color: #fff3f3;
-  border: 1px solid #ffcdd2;
-  border-radius: 4px;
-  color: #e55757;
-  margin: 10px 0;
+  padding: var(--spacing-sm);
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: var(--border-radius);
+  color: var(--error-color);
+  margin: var(--spacing-sm) 0;
   max-width: 268px;
 }
 
 .audio-error a {
-  color: #668fcf;
+  color: var(--primary-color);
   text-decoration: underline;
-  margin-left: 5px;
+  margin-left: var(--spacing-xs);
 }
 
 .audio-error a:hover {
-  color: #1565c0;
+  color: var(--primary-light);
 }
 
 .attachment-image img {
   max-width: 100%;
   max-height: 300px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
 }
 
 .attachment-video video {
   max-width: 100%;
   max-height: 300px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.attachment-info {
+  color: var(--text-light);
+  font-size: var(--font-size-small);
+}
+
+.attachment-info a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition-base);
+}
+
+.attachment-info a:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
+
+.attachment-info span {
+  margin-left: var(--spacing-xs);
+  color: var(--text-light);
 }

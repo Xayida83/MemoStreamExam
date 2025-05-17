@@ -1,71 +1,96 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant:wght@400;500;600;700&display=swap');
 @import './styles/variables.css';
 
-:root {
-  font-family: var(--font-primary);
-  line-height: var(--line-height-base);
-  font-weight: 400;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-secondary);
-  font-weight: 700;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: var(--font-primary);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+  background-color: var(--background-color);
 }
 
 .app {
-  max-width: var(--container-max-width);
-  margin: 0 auto;
-  text-align: center;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .notes-container {
-  max-width: var(--content-max-width);
-  margin: var(--spacing-lg) auto;
-  padding: var(--spacing-sm);
+  max-width: var(--container-max-width);
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-lg);
 }
 
 .new-note-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-lg);
+  background-color: var(--background-light);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.new-note-form h2 {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-xlarge);
+  color: var(--text-color);
+  margin-bottom: var(--spacing-md);
 }
 
 .new-note-form input,
 .new-note-form textarea {
-  padding: var(--spacing-xs);
+  width: 100%;
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
 }
 
-.new-note-form textarea {
-  min-height: 100px;
-  resize: vertical;
+.new-note-form input:focus,
+.new-note-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .new-note-form button {
-  padding: var(--spacing-xs) var(--spacing-sm);
   background-color: var(--primary-color);
-  color: var(--white);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-lg);
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
+  font-size: var(--font-size-base);
   transition: var(--transition-base);
 }
 
 .new-note-form button:hover {
-  background-color: var(--primary-light);
+  background-color: var(--primary-dark);
+}
+
+.new-note-form button:focus {
+  outline: none;
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+  .notes-container {
+    padding: var(--spacing-sm);
+  }
+
+  .new-note-form {
+    padding: var(--spacing-md);
+  }
+
+  .new-note-form h2 {
+    font-size: var(--font-size-large);
+  }
 }
 
 .notes-list {
