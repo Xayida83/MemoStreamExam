@@ -51,7 +51,6 @@
 .email-header h3 {
   font-family: var(--font-secondary);
   font-size: var(--font-size-xlarge);
-  font-weight: 500;
   margin: var(--spacing-xs) 0;
   color: var(--text-color);
   text-align: center;
@@ -120,11 +119,11 @@
   }
 
   .email-attachments {
-    width: 30%;
+    width: 35%;
   }
 
   .email-content {
-    width: 65%;
+    width: 63%;
     border-top: none;
     margin: 0;
   }

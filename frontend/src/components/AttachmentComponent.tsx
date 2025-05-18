@@ -48,25 +48,28 @@ const AttachmentComponent: React.FC<AttachmentComponentProps> = ({ attachment })
     if (isAudio(attachment.mimeType)) {
       return (
         <div className="attachment-audio">
-          <audio 
-            controls 
-            aria-label={`${fileTypeLabel}: ${displayName}`}
-            onError={(e) => {
-              const target = e.target as HTMLAudioElement;
-              setAudioError(target.error?.message || 'Ett fel uppstod vid uppspelning av ljudfilen');
-            }}
-          >
-            <source src={url} type={attachment.mimeType} />
-            Din webbläsare stödjer inte audio-taggen.
-          </audio>
-          {audioError && (
+          {audioError ? (
             <div className="audio-error" role="alert">
-              {audioError}              
+              {audioError}
             </div>
+          ) : (
+            <>
+              <audio 
+                controls 
+                aria-label={`${fileTypeLabel}: ${displayName}`}
+                onError={(e) => {
+                  const target = e.target as HTMLAudioElement;
+                  setAudioError(target.error?.message || 'Ett fel uppstod vid uppspelning av ljudfilen');
+                }}
+              >
+                <source src={url} type={attachment.mimeType} />
+                Din webbläsare stödjer inte audio-taggen.
+              </audio>
+              <div className="attachment-info">
+                <p className="song-name">{fileTypeLabel}: {displayName}</p>
+              </div>
+            </>
           )}
-          <div className="attachment-info">
-            <p className="song-name">{fileTypeLabel}: {displayName}</p>
-          </div>
         </div>
       );
     }
