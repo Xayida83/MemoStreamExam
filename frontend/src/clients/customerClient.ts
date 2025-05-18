@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Customer } from '../types/Customer';
 
 const BASE_URL = import.meta.env.VITE_BASE_ADDRESS;
-const CUSTOMER_ID = 'Jvyngltv56pm5S9Onoex'; // Samma ID som används i emailClient
+const CUSTOMER_ID = import.meta.env.VITE_CUSTOMER_ID;
 
 export async function fetchCustomer(): Promise<Customer> {
   try {

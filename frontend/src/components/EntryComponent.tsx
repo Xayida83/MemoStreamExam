@@ -1,23 +1,13 @@
 import React from 'react';
 import { Email } from '../types/Email';
 import AttachmentComponent from './AttachmentComponent';
+import { getAttachmentUrl } from '../utils/commonUtils';
 
 interface EntryComponentProps {
   email: Email;
 }
 
 const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
-  const getAttachmentUrl = (url: string) => {
-    // Om URL:en redan är en fullständig URL, returnera den som den är
-    if (url.startsWith('http')) {
-      return url;
-    }
-    // Annars lägg till backend-URL:en
-    const fullUrl = `http://localhost:5000${url}`;
-    console.log('Attachment URL:', fullUrl); // Debugging
-    return fullUrl;
-  };
-
   return (
     <article className="email-entry" aria-labelledby={`email-subject-${email.id}`}>
       <header className="email-header">
@@ -34,7 +24,7 @@ const EntryComponent: React.FC<EntryComponentProps> = ({ email }) => {
             {email.attachments.map((attachment) => (
               <AttachmentComponent 
                 key={attachment.id} 
-                attachment={attachment} 
+                attachment={{ ...attachment, url: getAttachmentUrl(attachment.url) }} 
               />
             ))}
           </div>
