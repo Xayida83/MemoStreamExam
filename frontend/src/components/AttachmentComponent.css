@@ -12,6 +12,18 @@
   align-items: center;
 }
 
+.attachment-audio audio {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.attachment-audio {
+  width: 100%;
+  max-width: 400px; 
+  margin: 0 auto;
+}
+
 .song-name {
   font-size: inherit;
   font-family: inherit;

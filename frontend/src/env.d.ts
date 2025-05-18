@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly VITE_GOOGLE_CLIENT_ID: string
   readonly VITE_GOOGLE_CLIENT_SECRET: string
   readonly VITE_BASE_ADDRESS: string
+  readonly VITE_FILE_BASE_ADDRESS: string
   readonly VITE_CUSTOMER_ID: string;
   // Mer miljövariabler kan läggas till här
   [key: string]: string | undefined

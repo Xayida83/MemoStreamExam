@@ -7,11 +7,14 @@
  * @param url The attachment URL
  * @returns The full URL
  */
+
+const FILE_BASE = import.meta.env.VITE_FILE_BASE_ADDRESS;
+
 export const getAttachmentUrl = (url: string): string => {
   if (url.startsWith('http')) {
     return url;
   }
-  return `http://localhost:5000${url}`;
+  return `${FILE_BASE}${url}`;
 };
 
 /**
