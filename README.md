@@ -4,7 +4,7 @@ MemoStream är en applikation för att hantera och automatisera e-postkommunikat
 
 
 
-## Funktioner (Sprint 1)
+## Funktioner
 
 - ✅ Automatisk hämtning av e-post från Gmail
 - ✅ Bearbetning av e-postmeddelanden och deras bilagor
@@ -66,6 +66,49 @@ Kunder skapas med följande information:
 - Inställningar för bilagor och notifieringar
 
 Kunder identifieras automatiskt baserat på avsändaradress.
+
+## Frontend-funktioner
+
+### Användargränssnitt
+- Responsiv design som anpassar sig till olika skärmstorlekar
+- E-postkarusell för enkel navigering mellan meddelanden
+- Sökfunktion för att filtrera e-posthistorik
+- Kontaktformulär för direktkommunikation
+- Dynamisk laddning av bilagor (lazy loading)
+
+### Visning av innehåll
+- Tydlig visning av e-postmeddelanden med ämne, datum och innehåll
+- Stöd för olika typer av bilagor:
+  - Bilder med beskrivande texter
+  - Ljudfiler med inbyggd spelare
+  - Videofiler med inbyggd spelare
+  - Dokument med direktlänkar
+
+## Tillgänglighetsanpassningar
+
+### Skärmläsarstöd
+- Semantisk HTML-struktur med korrekt användning av ARIA-attribut
+- Beskrivande alt-texter för bilder
+- Tydliga beskrivningar av mediatyper
+- Felmeddelanden som är läsbara för skärmläsare
+
+### Navigering
+- Fullständig tangentbordsnavigering
+- Tydlig fokusindikering
+- Logisk tab-ordning
+- Tydliga fokusindikatorer för interaktiva element
+
+### Visuell tillgänglighet
+- Konsekvent typografi och färgschema
+- Tydlig kontrast mellan text och bakgrund
+- Responsiv design för olika skärmstorlekar
+- Tydlig visuell feedback vid interaktioner
+
+### Formulär och interaktioner
+- Tydliga felmeddelanden
+- Validering av formulärinmatning
+- Tydlig feedback vid användarinteraktioner
+- Tillgängliga knappar och länkar
 
 ## Utveckling
 
