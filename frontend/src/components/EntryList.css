@@ -130,7 +130,7 @@
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width:1160px) {
   .entry-list {
     padding: var(--spacing-sm);
   }
